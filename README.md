@@ -30,15 +30,27 @@ https://itch.io/docs/butler/
 | `channel`   | ✔️       | Upload channel such as `windows`, `linux`, `mac`, `html5`, etc. [Official documentation](https://itch.io/docs/butler/pushing.html#channel-names)                   |
 | `version`   | ❌       | Optional version tag. If omitted, Butler auto-generates one. [Official documentation](https://itch.io/docs/butler/pushing.html#specifying-your-own-version-number) |
 
+## ⚠️ Security Warning — Use GitHub Secrets
+
+Never paste your Butler API key directly into your workflow or repository.
+
+Instead, store it securely using GitHub Secrets, as recommended in the official Butler documentation.
+
+🔐 GitHub documentation on secrets:
+https://docs.github.com/fr/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets
+
+Typically, you will store your key as:
+
+BUTLER_API_KEY
+
+…and reference it in your workflow like:
+
+api_key: ${{ secrets.BUTLER_API_KEY }}
+
 ## Example usage
 
 ```yml
 name: Deploy to Itch
-
-on:
-  push:
-    tags:
-      - "v*"
 
 jobs:
   upload:
