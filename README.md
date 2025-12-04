@@ -29,3 +29,37 @@ https://itch.io/docs/butler/
 | `project`   | ✔️       | Your Itch project identifier in the form `user/project`.                                                                                                           |
 | `channel`   | ✔️       | Upload channel such as `windows`, `linux`, `mac`, `html5`, etc. [Official documentation](https://itch.io/docs/butler/pushing.html#channel-names)                   |
 | `version`   | ❌       | Optional version tag. If omitted, Butler auto-generates one. [Official documentation](https://itch.io/docs/butler/pushing.html#specifying-your-own-version-number) |
+
+## Example usage
+
+```yml
+name: Deploy to Itch
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build your game
+        run: |
+          # Your build steps here
+          mkdir build
+          echo "Sample file" > build/game.txt
+
+      - name: Upload to Itch.io
+        uses: your-username/itch-upload-action@v1
+        with:
+          api_key: ${{ secrets.BUTLER_API_KEY }}
+          directory: build
+          project: yourname/yourgame
+          channel: windows
+          version: ${{ github.ref_name }}
+```
