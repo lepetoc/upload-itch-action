@@ -1,0 +1,52 @@
+name: "Upload to Itch"
+description: "Install butler and upload a build to Itch.io"
+
+inputs:
+  api_key:
+    description: "The API key provided by Itch. Refer to the butler docs to generate one."
+    required: true
+  directory:
+    description: "Path to the folder or .zip file you want to upload"
+    required: true
+  project:
+    description: "Your Itch.io project in the format user/project"
+    required: true
+  channel:
+    description: "Channel to upload to, e.g. windows, linux, html5"
+    required: true
+  version:
+    description: "Version string for the upload. If empty, butler will generate one."
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Set Butler API Key
+      shell: bash
+      run: echo "BUTLER_API_KEY=${{ inputs.api_key }}" >> $GITHUB_ENV
+
+    - name: Download Butler
+      shell: bash
+      run: |
+        mkdir -p $HOME/butler
+        curl -L -o $HOME/butler/butler.zip \
+          https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default
+        unzip $HOME/butler/butler.zip -d $HOME/butler
+        chmod +x $HOME/butler/butler
+
+    - name: Add Butler to PATH
+      shell: bash
+      run: echo "$HOME/butler" >> $GITHUB_PATH
+
+    - name: Upload to Itch.io
+      shell: bash
+      run: |
+        if [ -n "${{ inputs.version }}" ]; then
+          butler push "${{ inputs.directory }}" \
+            "${{ inputs.project }}:${{ inputs.channel }}" \
+            --userversion "${{ inputs.version }}"
+        else
+          butler push "${{ inputs.directory }}" \
+            "${{ inputs.project }}:${{ inputs.channel }}"
+        fi
