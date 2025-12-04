@@ -41,11 +41,13 @@ https://docs.github.com/fr/actions/how-tos/write-workflows/choose-what-workflows
 
 Typically, you will store your key as:
 
-BUTLER_API_KEY
+`BUTLER_API_KEY`
 
 …and reference it in your workflow like:
 
+```yml
 api_key: ${{ secrets.BUTLER_API_KEY }}
+```
 
 ## Example usage
 
