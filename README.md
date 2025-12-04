@@ -69,7 +69,7 @@ jobs:
           echo "Sample file" > build/game.txt
 
       - name: Upload to Itch.io
-        uses: your-username/itch-upload-action@v1
+        uses: lepetoc/itch-upload-action@v1
         with:
           api_key: ${{ secrets.BUTLER_API_KEY }}
           directory: build
